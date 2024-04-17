@@ -18,7 +18,6 @@ const Todo = () => {
     dispatch(fetchUser());
   };
   const handleDelete = async (id) => {
-    // setFiltered(filtered.filter((student) => student.id !== id));
     await axios.delete(`http://localhost:3000/data/${id}`);
     dispatch(fetchUser());
   };
@@ -58,9 +57,8 @@ const Todo = () => {
                       : "none",
                   }}
                 >
-                  {data.title}
+                  {data.id}. {data.title}
                 </h2>
-                {/* <p>{data.completed ? "true" : "false"}</p> */}
               </Box>
               <Button
                 onClick={() => handleDelete(data.id)}
