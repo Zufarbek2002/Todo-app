@@ -4,17 +4,37 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Box, Container, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import axios from "axios";
 
 const AddComp = () => {
   const [open, setOpen] = React.useState(false);
-
+  const [tasks, setTasks] = React.useState({
+    title: "",
+    completed: false,
+  });
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAdd = () => {
+    setOpen(false);
+    axios.post("http://localhost:3000/data", tasks);
+    setTasks({
+      title: "",
+      completed: false
+    });
   };
 
   return (
@@ -51,19 +71,34 @@ const AddComp = () => {
         >
           <DialogTitle id="responsive-dialog-title">{"Add tasks"}</DialogTitle>
           <Box>
-            <DialogContent sx={{display:"flex", flexDirection:'column', gap: 2}}>
+            <DialogContent
+              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+            >
               <TextField
                 id="outlined-basic"
                 label="Task title"
                 variant="outlined"
                 color="primary"
+                onChange={(e) => {
+                  setTasks({
+                    ...tasks,
+                    title: e.target.value,
+                  });
+                }}
               />
+              <InputLabel id="demo-simple-select-label">Completed:</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 // value={age}
                 label="Complete"
-                // onChange={handleChange}
+                defaultValue={false}
+                onChange={(e) => {
+                  setTasks({
+                    ...tasks,
+                    completed: e.target.value,
+                  });
+                }}
               >
                 <MenuItem value={true}>Completed</MenuItem>
                 <MenuItem value={false}>Uncompleted</MenuItem>
@@ -74,7 +109,7 @@ const AddComp = () => {
             <Button autoFocus onClick={handleClose}>
               Cancel
             </Button>
-            <Button onClick={handleClose} autoFocus>
+            <Button onClick={handleAdd} autoFocus>
               Add
             </Button>
           </DialogActions>

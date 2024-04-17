@@ -5,25 +5,27 @@ import { Box, Button, Card, Checkbox, Container } from "@mui/material";
 import axios from "axios";
 
 const Todo = () => {
-  const [checked, setChecked] = useState();
+  const [filtered, setFiltered] = useState();
   const { loading, data, error } = useSelector((state) => state.data);
   const dispatch = useDispatch();
-  const [filtered, setFiltered] = useState(data);
-  const handleChange = (event, id) => {
-    setChecked(event.target.checked);
-    axios.post(`http://localhost:3000/data/${id}`, {completed: event.target.checked})
+  const handleChange = async(e, id) => {
+    const res = data.filter(data=>data.id==id)
+    await axios.put(`http://localhost:3000/data/${id}`, {
+      title: res[0].title,
+      completed: e.target.checked,
+    });
+    await axios.get("http://localhost:3000/data").then(res=>setFiltered(res.data))
   };
-  const handleDelete = (id)=>{
+  const handleDelete = (id) => {
     setFiltered(filtered.filter((student) => student.id !== id));
-    axios.delete(`http://localhost:3000/data/${id}`)
-  }
+    axios.delete(`http://localhost:3000/data/${id}`);
+  };
   useEffect(() => {
     dispatch(fetchUser());
   }, []);
-  useEffect(()=>{
-    setFiltered(data)
-  },[data])
-  // console.log(checked)
+  useEffect(() => {
+    setFiltered(data);
+  }, [data]);
   return (
     <Container>
       <Box mt={4}>
@@ -42,12 +44,29 @@ const Todo = () => {
                 alignItems: "center",
               }}
             >
-              <Box sx={{display:"flex", gap:1, alignItems:"center"}}>
-                <Checkbox checked={data.completed} onChange={()=>handleChange(data.id)} />
-                <h2 style={{textDecorationLine: data.completed ? "line-through" : "none"}}>{data.title}</h2>
-              {/* <p>{data.completed ? "true" : "false"}</p> */}
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                <Checkbox
+                  defaultChecked={data.completed}
+                  onChange={(e) => handleChange(e, data.id)}
+                />
+                <h2
+                  style={{
+                    textDecorationLine: data.completed
+                      ? "line-through"
+                      : "none",
+                  }}
+                >
+                  {data.title}
+                </h2>
+                {/* <p>{data.completed ? "true" : "false"}</p> */}
               </Box>
-              <Button onClick={()=>handleDelete(data.id)}>Delete</Button>
+              <Button
+                onClick={() => handleDelete(data.id)}
+                variant="outlined"
+                color="error"
+              >
+                Delete
+              </Button>
             </Card>
           ))}
       </Box>
