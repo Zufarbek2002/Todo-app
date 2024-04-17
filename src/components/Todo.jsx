@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../app/todo/todoSlice";
@@ -8,17 +9,18 @@ const Todo = () => {
   const [filtered, setFiltered] = useState();
   const { loading, data, error } = useSelector((state) => state.data);
   const dispatch = useDispatch();
-  const handleChange = async(e, id) => {
-    const res = data.filter(data=>data.id==id)
+  const handleChange = async (e, id) => {
+    const res = data.filter((data) => data.id == id);
     await axios.put(`http://localhost:3000/data/${id}`, {
       title: res[0].title,
       completed: e.target.checked,
     });
-    await axios.get("http://localhost:3000/data").then(res=>setFiltered(res.data))
+    dispatch(fetchUser());
   };
-  const handleDelete = (id) => {
-    setFiltered(filtered.filter((student) => student.id !== id));
-    axios.delete(`http://localhost:3000/data/${id}`);
+  const handleDelete = async (id) => {
+    // setFiltered(filtered.filter((student) => student.id !== id));
+    await axios.delete(`http://localhost:3000/data/${id}`);
+    dispatch(fetchUser());
   };
   useEffect(() => {
     dispatch(fetchUser());

@@ -13,8 +13,11 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../app/todo/todoSlice";
 
 const AddComp = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [tasks, setTasks] = React.useState({
     title: "",
@@ -28,13 +31,14 @@ const AddComp = () => {
     setOpen(false);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setOpen(false);
-    axios.post("http://localhost:3000/data", tasks);
+    await axios.post("http://localhost:3000/data", tasks);
     setTasks({
       title: "",
-      completed: false
+      completed: false,
     });
+    dispatch(fetchUser());
   };
 
   return (
