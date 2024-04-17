@@ -1,12 +1,12 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../app/todo/todoSlice";
 import { Box, Button, Card, Checkbox, Container } from "@mui/material";
 import axios from "axios";
 
-const Todo = () => {
-  const [filtered, setFiltered] = useState();
+const Todo = ({ filtered, setFiltered }) => {
   const { loading, data, error } = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const handleChange = async (e, id) => {

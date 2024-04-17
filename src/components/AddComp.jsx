@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -13,10 +14,11 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../app/todo/todoSlice";
 
-const AddComp = () => {
+const AddComp = ({ setFiltered }) => {
+  const { data } = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [tasks, setTasks] = React.useState({
@@ -40,7 +42,19 @@ const AddComp = () => {
     });
     dispatch(fetchUser());
   };
-
+  const handleSearch = (e) => {
+    const text = e.target.value.trim().toLowerCase();
+    console.log(text)
+    if (text) {
+      setFiltered(
+        data.filter(
+          (e) =>
+            e.title.toLowerCase().includes(text) ||
+            e.id.toLowerCase().includes(text)
+        )
+      );
+    } else return setFiltered(data);
+  };
   return (
     <Container>
       <React.Fragment>
@@ -58,6 +72,7 @@ const AddComp = () => {
             label="Searched"
             variant="outlined"
             color="success"
+            onChange={handleSearch}
           />
           <Button
             sx={{ paddingX: 5 }}
