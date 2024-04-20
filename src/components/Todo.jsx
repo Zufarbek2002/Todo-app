@@ -1,38 +1,36 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../app/todo/todoSlice";
 import { Box, Button, Card, Checkbox, Container } from "@mui/material";
-import axios from "axios";
+import { useTodoStore } from "../store/todoStore";
 
 const Todo = ({ filtered, setFiltered }) => {
-  const { loading, data, error } = useSelector((state) => state.data);
-  const dispatch = useDispatch();
+  const { loading, error, todo, fetchTodo, deleteTodo, editTodo } =
+    useTodoStore();
+
   const handleChange = async (e, id) => {
-    const res = data.filter((data) => data.id == id);
-    await axios.put(`http://localhost:3000/data/${id}`, {
-      title: res[0].title,
-      completed: e.target.checked,
-    });
-    dispatch(fetchUser());
+    const bool = e.target.checked;
+    editTodo(id, bool);
   };
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3000/data/${id}`);
-    dispatch(fetchUser());
+
+  const handleDelete = (id) => {
+    if (confirm("Delete this task")) {
+      deleteTodo(id);
+    }
   };
+
   useEffect(() => {
-    dispatch(fetchUser());
+    fetchTodo();
   }, []);
   useEffect(() => {
-    setFiltered(data);
-  }, [data]);
+    setFiltered(todo);
+  }, [todo]);
   return (
     <Container>
       <Box mt={4}>
         {loading && <h2>Loading...</h2>}
         {error && <h2>{error}</h2>}
-        {data.length > 0 &&
+        {todo.length > 0 &&
           filtered.map((data) => (
             <Card
               key={data.id}
@@ -61,9 +59,9 @@ const Todo = ({ filtered, setFiltered }) => {
                 </h2>
               </Box>
               <Button
-                onClick={() => handleDelete(data.id)}
                 variant="outlined"
                 color="error"
+                onClick={() => handleDelete(data.id)}
               >
                 Delete
               </Button>

@@ -13,13 +13,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../app/todo/todoSlice";
+import { useTodoStore } from "../store/todoStore";
 
 const AddComp = ({ setFiltered }) => {
-  const { data } = useSelector((state) => state.data);
-  const dispatch = useDispatch();
+  const { todo, addTodo } = useTodoStore();
+
   const [open, setOpen] = React.useState(false);
   const [tasks, setTasks] = React.useState({
     title: "",
@@ -33,27 +31,25 @@ const AddComp = ({ setFiltered }) => {
     setOpen(false);
   };
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     setOpen(false);
-    await axios.post("http://localhost:3000/data", tasks);
+    addTodo(tasks)
     setTasks({
       title: "",
       completed: false,
     });
-    dispatch(fetchUser());
   };
   const handleSearch = (e) => {
     const text = e.target.value.trim().toLowerCase();
-    console.log(text)
     if (text) {
       setFiltered(
-        data.filter(
+        todo.filter(
           (e) =>
             e.title.toLowerCase().includes(text) ||
             e.id.toLowerCase().includes(text)
         )
       );
-    } else return setFiltered(data);
+    } else return setFiltered(todo);
   };
   return (
     <Container>
@@ -109,7 +105,6 @@ const AddComp = ({ setFiltered }) => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                // value={age}
                 label="Complete"
                 defaultValue={false}
                 onChange={(e) => {

@@ -1,23 +1,8 @@
 {
   "data": [
     {
-      "title": "et doloremque nulla",
-      "completed": false,
-      "id": "8"
-    },
-    {
-      "title": "molestiae perspiciatis ipsa",
-      "completed": false,
-      "id": "9"
-    },
-    {
-      "title": "quo adipisci enim quam ut ab",
-      "completed": false,
-      "id": "11"
-    },
-    {
       "title": "ipsa repellendus fugit nisi",
-      "completed": true,
+      "completed": false,
       "id": "12"
     },
     {
@@ -46,9 +31,9 @@
       "completed": true
     },
     {
-      "id": "18",
       "title": "dolorum est consequatur ea mollitia in culpa",
-      "completed": false
+      "completed": false,
+      "id": "18"
     },
     {
       "id": "19",
@@ -71,9 +56,9 @@
       "id": "22"
     },
     {
-      "id": "23",
       "title": "et itaque necessitatibus maxime molestiae qui quas velit",
-      "completed": false
+      "completed": false,
+      "id": "23"
     }
   ]
 }
